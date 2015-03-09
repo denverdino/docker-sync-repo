@@ -6,7 +6,7 @@ import getopt
 # print help and exit
 def help():
     print "python sync_images -h|--help"
-    print "python sync_images [-f|--file <config_file>] [-d|--docker_host <tcp://server:port>|'unix://var/run/docker.sock'>'] [-r|--registry <host:port>] [-i|--insecure_registry]"
+    print "python sync_images [-f|--file <config_file>] [-d|--docker_host <tcp://server:port>|'unix://var/run/docker.sock'] [-r|--registry <host:port>] [-i|--insecure_registry]"
     sys.exit(1)
    
 

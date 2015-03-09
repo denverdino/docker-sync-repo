@@ -15,7 +15,7 @@ python sync_images -h|--help
 
 Synchroize images
 ```sh
-python sync_images [-f|--file <config_file>] [-d|--docker_host <tcp://server:port>|'unix://var/run/docker.sock'>'] [-r|--registry <host:port>] [-i|--insecure_registry]
+python sync_images [-f|--file <config_file>] [-d|--docker_host <tcp://server:port>|'unix://var/run/docker.sock'] [-r|--registry <host:port>] [-i|--insecure_registry]
 ```
 
 
