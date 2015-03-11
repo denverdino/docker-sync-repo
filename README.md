@@ -1,4 +1,4 @@
-## Synchronize the Docker repositories from Docker Hub to local Registry
+## Synchronize images from Docker Hub to local Registry
 
 
 ### Editing image lists
@@ -13,10 +13,27 @@ Help
 python sync_images -h|--help
 ```
 
-Synchronize images
+
+Synchronize images from specific repository 
+
 ```sh
-python sync_images [-f|--file <config_file>] [-d|--docker_host <tcp://server:port>|'unix:///var/run/docker.sock'] [-r|--registry <host:port>] [-i|--insecure_registry]
+python sync_images -n|--name <repo_name> 
 ```
 
 
-  
+Synchronize images from the configuraiton files, by default "images.txt"
+
+```sh
+python sync_images [-f|--file <config_file>]
+```
+
+Other optional arguments
+
+
+```sh
+-d|--docker_host <tcp://server:port>|<'unix:///var/run/docker.sock'>
+
+-r|--registry <host:port>
+
+-i|--insecure_registry
+```
