@@ -2,18 +2,19 @@ import docker
 import sys
 import os
 import getopt
+import traceback
 
 # print help and exit
 def help():
     print "python sync_images -h|--help"
-    print "python sync_images -n|--name <repo_name>     [-d|--docker_host <tcp://server:port>|<'unix:///var/run/docker.sock'>] [-r|--registry <host:port>] [-i|--insecure_registry]"
-    print "python sync_images [-f|--file <config_file>] [-d|--docker_host <tcp://server:port>|<'unix:///var/run/docker.sock'>] [-r|--registry <host:port>] [-i|--insecure_registry]"
+    print "python sync_images [-n|--name <repo_name>]   [-d|--docker_host <tcp://server:port>|'unix:///var/run/docker.sock'] [-r|--registry <host:port>] [-i|--insecure_registry]"
+    print "python sync_images [-f|--file <config_file>] [-d|--docker_host <tcp://server:port>|'unix:///var/run/docker.sock'] [-r|--registry <host:port>] [-i|--insecure_registry]"
     sys.exit(1)
    
 
 def sync_repo(client, registry, insecure_registry, repo):
     print "Pulling repository %s ..." % repo
-    client.pull(repo)
+    client.pull(repo, insecure_registry=insecure_registry)
 
     images = client.images(name=repo)
 
@@ -29,13 +30,16 @@ def sync_repo(client, registry, insecure_registry, repo):
     print "New repository is %s ." % new_repo_name
 
     for image in images:
-        name = image[u'RepoTags'][0].encode('utf-8')
-        image_name = name.split(':')
-        tag = name.split(':')[len(image_name) - 1]
-        print "Tagging %s:%s %s:%s" % (repo, tag, new_repo_name, tag)
-        client.tag(name, new_repo_name, tag, True)
-        print "Pushing repository %s:%s ..." % (new_repo_name, tag)
-        client.push(new_repo_name, tag=tag, insecure_registry=insecure_registry)
+        try:
+            name = image[u'RepoTags'][0].encode('utf-8')
+            image_name = name.split(':')
+            tag = name.split(':')[len(image_name) - 1]
+            print "Tagging %s:%s %s:%s" % (repo, tag, new_repo_name, tag)
+            client.tag(name, new_repo_name, tag, True)
+            print "Pushing repository %s:%s..." % (new_repo_name, tag)
+            client.push(new_repo_name, tag=tag, insecure_registry=insecure_registry)
+        except Exception, e:
+            traceback.print_exc()
     print "Complete the sync of repository %s." % repo
 
 
@@ -86,4 +90,9 @@ for repo in lines:
         continue
     if repo == '':
         continue
-    sync_repo(client, registry, insecure_registry, repo)
+    try:
+        sync_repo(client, registry, insecure_registry, repo)
+    except Exception, e:  
+        traceback.print_exc()
+        
+        
